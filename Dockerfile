@@ -1,5 +1,5 @@
 # Use debian:10 as the base image
-FROM debian:10
+FROM debian:12-slim
 
 # Install necessary dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \

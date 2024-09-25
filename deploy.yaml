@@ -10,6 +10,8 @@ metadata:
   labels:
     app: go-app-lk
   name: go-app-lk
+  annotations:
+    security-patch-uuid: dfcb8336-2648-4fcb-ba13-2937bb5e2275
   namespace: go-app-lk
 spec:
   selector:
@@ -24,8 +26,12 @@ spec:
         fsGroup: 472
         supplementalGroups:
           - 0
+      automountServiceAccountToken: false
       containers:
         - name: app-lk
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
           image: lkup77/test_vuln_go:4
           imagePullPolicy: Always
           ports:
