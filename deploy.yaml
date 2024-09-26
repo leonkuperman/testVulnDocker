@@ -4,6 +4,13 @@ kind: Namespace
 metadata:
   name: go-app-lk
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: default
+  namespace: go-app-lk
+automountServiceAccountToken: false
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -11,6 +18,8 @@ metadata:
     app: go-app-lk
   name: go-app-lk
   namespace: go-app-lk
+  annotations:
+    security-patch-uuid: "3e72e627-6ddf-443e-a12d-92a4f630e38d"
 spec:
   selector:
     matchLabels:
@@ -20,6 +29,7 @@ spec:
       labels:
         app: go-app-lk
     spec:
+      serviceAccountName: default
       securityContext:
         fsGroup: 472
         supplementalGroups:
@@ -32,6 +42,13 @@ spec:
             - containerPort: 3000
               name: go-app-lk
               protocol: TCP
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
           resources:
             requests:
               cpu: 250m
